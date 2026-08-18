@@ -30,7 +30,7 @@ From `ROADMAP.md` and `V12_TASKS.md`, v12 reactions should:
 | Meeting | Existing non-priority reaction | Teams/Zoom foreground | `sit` or `leash` | None in committed behavior | Yes | Existing secondary behavior |
 | Engineering supervision | Existing non-priority reaction | VSCode, terminals, Docker, Node-RED/Ignition title tokens | `patrol` | None in committed behavior | Yes | Existing broad behavior |
 
-## Draft/Placeholder State
+## Profile State
 
 `REACTION_PROFILES` is now wired into:
 
@@ -40,42 +40,37 @@ From `ROADMAP.md` and `V12_TASKS.md`, v12 reactions should:
 
 `apply_activity_reaction` still owns trigger order and maps foreground app/CPU conditions to reaction names.
 
-Draft balloon copy currently proposed:
+Current placeholder copy:
 
 | Reaction | Draft Bubble | Needs User Eye? |
 | --- | --- | --- |
 | Excel | `GRROWWLL` | Low; already accepted baseline |
-| PowerPoint | `SIGH.` / `ENOUGH.` | Yes |
-| Terminal | `ON WATCH` | Yes |
-| CPU spike | `HOT.` | Yes |
-| Inactivity | `WALK?` | Yes |
-| Meeting | `STILL?` / `WALK.` | Optional |
-| Engineering supervision | `STEADY.` | Optional |
+| PowerPoint | `SIGH.` / `YAAWN...` | Placeholder until real bored/yawn animation |
+| Terminal | `ON WATCH` | Approved as placeholder; should become more Dex-like in animation pass |
+| CPU spike | No balloon; 1.4x patrol speed | Placeholder until real alert animation |
+| Inactivity | `WALK?` in test profile | Placeholder until real leash/reminder animation |
+| Meeting | `STILL?` / `WALK.` | Pack 2 |
+| Engineering supervision | `STEADY.` | Pack 2 |
 
 ## What Is Placeholder For Review
 
-These items need user validation before treating them as canon:
+These items are placeholders, not final emotional design:
 
-- Exact balloon wording for PowerPoint, Terminal, CPU spike, and Inactivity.
-- Whether Terminal should be distinct from broad engineering supervision.
-- Whether CPU spike should be urgent/protective or mildly judgmental.
-- Whether Inactivity should be gentle guardian energy or more insistent.
-- Whether non-priority meeting/engineering reactions should keep test menu entries or be de-emphasized.
+- Terminal should eventually feel more Dex-like than plain `ON WATCH`, but the placeholder is accepted for now.
+- CPU spike should eventually be less literal than a text label; current placeholder is faster patrol movement.
+- Inactivity should eventually be a real leash/reminder animation rather than relying on text.
+- PowerPoint should become an emotional progression: boredom, sigh/yawn, then nap.
+- Meeting and engineering reactions should stay as the second pack of emotes.
 
 ## User Decisions Captured
 
-- PowerPoint should send Dex into sleep mode for now.
-- Nice-to-have for PowerPoint: add a transition where Dex yawns before actually entering the nap/sleep sprite.
-- Terminal balloon `ON WATCH` is approved.
-- CPU spike placeholder emote should be patrol movement about 40 percent faster, not a balloon for now.
-- Inactivity placeholder emote should be sleep mode, not leash/walk prompting for now.
-
-Update after review:
-
 - Keep the earlier PowerPoint spec: PowerPoint makes Dex bored/sitting first, then sleep after a longer active duration. Do not switch to immediate sleep.
 - PowerPoint yawn transition can be balloon-based before the sleep sprite because v12 expression should avoid fragile base-sprite emotes.
+- Eventually PowerPoint should become a small emotional animation sequence rather than just one pose or one balloon.
+- Terminal `ON WATCH` is approved as a placeholder.
 - CPU spike speed behavior is implementation-choice; prefer movement-speed change first, not faster frame cycling, to avoid amplifying leg jank.
 - Inactivity can stay implementation-choice for now. Long-term goal is for Dex to bring his leash roughly every hour as a real break reminder.
+- Meeting and engineering reactions should be treated as the second emote pack.
 
 ## Inactivity / Leash Design Notes
 
@@ -114,6 +109,34 @@ The code does not yet have:
 - Per-reaction cooldown.
 - Real-clock hourly leash reminder.
 - Dedicated status display of profile metadata beyond the current reaction name.
+- Animation/emote specs for the final non-placeholder reactions.
+
+## Emote Pack Plan
+
+### Pack 1: Current v12 Placeholders
+
+- Excel: growl/disappointment.
+- PowerPoint: bored, sigh/yawn, eventual nap.
+- Terminal: guardian watch.
+- CPU spike: alert patrol.
+- Inactivity: leash/reminder.
+
+### Pack 2: Later Secondary Emotes
+
+- Meeting fatigue.
+- Engineering supervision.
+- Docker/Node-RED/Ignition-specific variants if they prove useful.
+
+### Animation Prep
+
+Before replacing placeholders with real emotes, define:
+
+- Trigger and priority.
+- Emotional arc, not just final pose.
+- Start pose, transition pose, and end pose.
+- Whether the animation should move Dex, change only overlays, or use a dedicated sprite cycle.
+- Duration and cooldown.
+- What should happen if a higher-priority reaction interrupts it.
 
 ## Recommended Next Implementation
 
@@ -123,11 +146,4 @@ After user review:
 2. Decide whether the stacked movement + reaction branch should become a v12 candidate.
 3. Add simple anti-spam timing only after the base profile behavior is visible and accepted.
 4. Implement the real-clock leash reminder in a separate lane/branch.
-
-## Review Questions
-
-1. Should Terminal say `ON WATCH`, or should it be more Dex-like?
-2. Is CPU spike `HOT.` too literal, or should he be more guardian/protective there?
-3. Is Inactivity `WALK?` correct, or should he be more persistent?
-4. Should PowerPoint be bored-silent, sighing, or openly judgmental?
-5. Should meeting/engineering stay as secondary reactions, or should v12 focus only on the five priority reactions?
+5. Start the animation/emote spec before trying more sprite edits.

@@ -157,11 +157,15 @@ Tasks:
 
 - Draft an animation metadata shape for pose, frames, facing direction, anchor point, contact point, frame rate, overlays, and movement speed.
 - Identify what would change in `dex_desktop.py` if animation definitions were data-driven.
+- Define the first real emote pack as emotional arcs rather than one-off sprites.
+- Prep pack 1 emotes: Excel, PowerPoint, Terminal, CPU spike, and Inactivity.
+- Keep pack 2 emotes separate: Meeting fatigue and engineering supervision.
 - Do not replace the runtime in v12.
 
 Acceptance output:
 
 - A short proposal that helps decide whether v13 should refactor animation handling.
+- A clear emote spec that says what each animation should communicate before any new sprite editing starts.
 
 Autonomous allowed:
 
