@@ -13,6 +13,8 @@ SCALE = 2
 PET_W = 188
 PET_H = 170
 SPRITE_Y = PET_H - 132 + 2
+SPRITE_X_BASE = 2
+SPRITE_NUDGE_POSES = {"zoom"}
 DEX_VERSION = "v11-walk-cleanup-backlog"
 
 
@@ -715,11 +717,11 @@ class DexDesktop:
             return False
         self.canvas.delete("all")
         stride = 0
-        if self.pose in {"trot", "happy", "patrol", "leash", "zoom"}:
+        if self.pose in SPRITE_NUDGE_POSES:
             stride = -1 if self.step_phase < 0.5 else 1
         rate = 14 if pose.startswith("zoom") else 7 if pose.startswith(("trot", "happy", "patrol")) else 3
         index = int(time.time() * rate) % len(frames)
-        sprite_x = 2 + stride
+        sprite_x = SPRITE_X_BASE + stride
         self.canvas.create_image(sprite_x, SPRITE_Y, image=frames[index], anchor="nw")
         self.draw_reaction_overlays(pose, sprite_x, SPRITE_Y)
         self.draw_life_overlays(pose, SPRITE_Y)
