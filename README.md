@@ -16,6 +16,7 @@ Dex is a static browser prototype and Windows desktop overlay trial for a pixel-
 `stable-v9-corso-clean/` contains the cleaned Corso-proportion trial with artifact-cleaned sprite edges.
 `stable-v10-growl-balloon-clean/` contains the confirmed Excel growl balloon version with cleaned detached sit-sprite artifacts.
 `stable-v11-walk-cleanup-backlog/` contains the current working desktop version with growl balloon, detached artifact cleanup, and remaining walking lower-body redraw work documented.
+`v12-reaction-state-and-sprite-diagnostics` brings the current main branch up to the reaction-profile baseline: contextual reaction profiles, manual test reactions, status diagnostics, sprite cleanup tooling, and placeholder emote behavior before final sprite redraws.
 
 Open `index.html` in a browser to try it. Dex is rendered on canvas, so his sprite and behavior states are generated live rather than stored as fixed image frames.
 
@@ -33,6 +34,7 @@ Open `index.html` in a browser to try it. Dex is rendered on canvas, so his spri
 - Gets more persistent after long inactivity.
 - Can be dragged around the screen as a short walk.
 - Can enter midnight patrol and has rare zoomies.
+- Uses v12 reaction profiles with priorities, durations, cooldowns, test-menu entries, and placeholder bubbles/overlays.
 
 ## Files
 
