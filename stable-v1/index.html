@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dex Desktop Pet</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="desktop-shell" aria-label="Dex desktop pet prototype">
+      <section class="workbench">
+        <div class="window active" data-app="terminal">
+          <header>
+            <span>Ignition Gateway Console</span>
+            <div class="window-actions"><i></i><i></i><i></i></div>
+          </header>
+          <pre>&gt; docker compose up ignition node-red
+&gt; gateway: online
+&gt; plc tags: 2481 watched
+&gt; dex: supervising workstation...</pre>
+        </div>
+
+        <div class="window small" data-app="vscode">
+          <header>
+            <span>VSCode</span>
+            <div class="window-actions"><i></i><i></i><i></i></div>
+          </header>
+          <pre>src/pipeline.ts
+PLC_POLL_MS = 500
+status: steady</pre>
+        </div>
+
+        <div class="window sheet" data-app="excel">
+          <header>
+            <span>Excel</span>
+            <div class="window-actions"><i></i><i></i><i></i></div>
+          </header>
+          <div class="grid" aria-hidden="true"></div>
+        </div>
+
+        <canvas id="dex" width="260" height="180" aria-label="Dex pixel-art desktop pet"></canvas>
+
+        <div class="notification" hidden>
+          <strong>Build warning</strong>
+          <span>Line pressure tag stale</span>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <div>
+          <p class="eyebrow">Dex</p>
+          <h1>Old-Soul Workstation Dog</h1>
+        </div>
+
+        <div class="status-grid">
+          <label>
+            <span>Active app</span>
+            <select id="appSelect">
+              <option value="terminal">Terminal</option>
+              <option value="vscode">VSCode</option>
+              <option value="docker">Docker Desktop</option>
+              <option value="node-red">Node-RED</option>
+              <option value="ignition">Ignition</option>
+              <option value="powerpoint">PowerPoint</option>
+              <option value="excel">Excel</option>
+              <option value="meeting">Teams / Zoom</option>
+            </select>
+          </label>
+
+          <label>
+            <span>CPU activity</span>
+            <input id="cpuRange" type="range" min="0" max="100" value="28">
+          </label>
+
+          <label>
+            <span>Time inactive</span>
+            <input id="idleRange" type="range" min="0" max="90" value="8">
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="attentionBtn" type="button">Give Attention</button>
+          <button id="walkBtn" type="button">Walk Dex</button>
+          <button id="notifyBtn" type="button">Trigger Notification</button>
+          <button id="midnightBtn" type="button">Midnight Patrol</button>
+        </div>
+
+        <dl class="readout">
+          <div><dt>Mood</dt><dd id="moodText">Calm</dd></div>
+          <div><dt>Behavior</dt><dd id="behaviorText">Supervising</dd></div>
+          <div><dt>Carry</dt><dd id="itemText">None</dd></div>
+        </dl>
+      </aside>
+    </main>
+
+    <script src="dex.js"></script>
+  </body>
+</html>
