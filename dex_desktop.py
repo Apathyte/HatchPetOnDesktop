@@ -13,7 +13,84 @@ SCALE = 2
 PET_W = 188
 PET_H = 170
 SPRITE_Y = PET_H - 132 + 2
+SPRITE_X_BASE = 2
+SPRITE_NUDGE_POSES = {"zoom"}
 DEX_VERSION = "v11-walk-cleanup-backlog"
+
+REACTION_PROFILES = {
+    "excel_disappointed": {
+        "label": "Test Excel reaction",
+        "priority": 10,
+        "pose": "sit",
+        "bubble": "GRROWWLL",
+        "duration": 4,
+        "cooldown": 45,
+    },
+    "powerpoint_bored": {
+        "label": "Test PowerPoint reaction",
+        "priority": 20,
+        "pose": "sit",
+        "bubble": "SIGH.",
+        "duration": 5,
+        "cooldown": 60,
+    },
+    "powerpoint_bored_long": {
+        "priority": 20,
+        "pose": "sleep",
+        "bubble": "YAAWN...",
+        "duration": 8,
+        "cooldown": 180,
+    },
+    "terminal_watch": {
+        "label": "Test Terminal reaction",
+        "priority": 30,
+        "pose": "patrol",
+        "bubble": "ON WATCH",
+        "duration": 8,
+        "cooldown": 60,
+    },
+    "cpu_spike": {
+        "label": "Test CPU spike",
+        "priority": 40,
+        "pose": "patrol",
+        "speed_multiplier": 1.4,
+        "duration": 8,
+        "cooldown": 45,
+    },
+    "inactivity": {
+        "label": "Test Inactivity",
+        "priority": 50,
+        "pose": "leash",
+        "item": "leash",
+        "bubble": "WALK?",
+        "duration": 12,
+        "cooldown": 300,
+    },
+    "meeting_watch": {
+        "priority": 60,
+        "pose": "sit",
+        "bubble": "STILL?",
+        "duration": 6,
+        "cooldown": 120,
+    },
+    "meeting_fatigue": {
+        "label": "Test Meeting fatigue",
+        "priority": 60,
+        "pose": "leash",
+        "item": "leash",
+        "bubble": "WALK.",
+        "duration": 12,
+        "cooldown": 300,
+    },
+    "supervising": {
+        "label": "Test Engineering supervision",
+        "priority": 70,
+        "pose": "patrol",
+        "bubble": "STEADY.",
+        "duration": 8,
+        "cooldown": 90,
+    },
+}
 
 
 class WindowsActivityMonitor:
@@ -147,6 +224,9 @@ class DexDesktop:
         self.always_on_top = True
         self.activity_monitor = WindowsActivityMonitor()
         self.current_reaction = "none"
+        self.reaction_started_at = 0
+        self.reaction_until = 0
+        self.reaction_cooldowns = {}
         self.current_activity = {"exe": "", "title": "", "cpu": None, "active_seconds": 0}
         self.status_window = None
         self.status_value_labels = {}
@@ -220,10 +300,10 @@ class DexDesktop:
 
     def build_test_reaction_menu(self):
         menu = tk.Menu(self.menu, tearoff=0)
-        menu.add_command(label="Test Excel reaction", command=lambda: self.set_test_reaction("excel_disappointed"))
-        menu.add_command(label="Test PowerPoint reaction", command=lambda: self.set_test_reaction("powerpoint_bored"))
-        menu.add_command(label="Test Meeting fatigue", command=lambda: self.set_test_reaction("meeting_fatigue"))
-        menu.add_command(label="Test Engineering supervision", command=lambda: self.set_test_reaction("supervising"))
+        for reaction, profile in REACTION_PROFILES.items():
+            label = profile.get("label")
+            if label:
+                menu.add_command(label=label, command=lambda name=reaction: self.set_test_reaction(name))
         menu.add_separator()
         menu.add_command(label="Clear test reaction", command=self.clear_test_reaction)
         return menu
@@ -277,6 +357,7 @@ class DexDesktop:
         self.manual_until = 0
         self.attention_until = 0
         self.zoomies_until = 0
+        self.clear_reaction_state(clear_test=True)
 
     def nap(self):
         self.set_mode("sleeping")
@@ -316,12 +397,18 @@ class DexDesktop:
         self.refresh_menu_labels()
 
     def set_test_reaction(self, reaction):
-        self.test_reaction = reaction
         self.resume_roaming()
+        self.test_reaction = reaction
 
     def clear_test_reaction(self):
-        self.test_reaction = None
         self.resume_roaming()
+
+    def clear_reaction_state(self, clear_test=False):
+        self.current_reaction = "none"
+        self.reaction_until = 0
+        self.reaction_started_at = 0
+        if clear_test:
+            self.test_reaction = None
 
     def refresh_menu_labels(self):
         top_label = "Always on top: yes" if self.always_on_top else "Always on top: no"
@@ -343,7 +430,7 @@ class DexDesktop:
         self.status_window.protocol("WM_DELETE_WINDOW", self.close_status_window)
         self.status_value_labels = {}
 
-        labels = ["Mode", "Pose", "Reaction", "Test reaction", "Detected app", "Window title", "Active time", "CPU", "Always on top"]
+        labels = ["Mode", "Pose", "Reaction", "Reaction time", "Test reaction", "Detected app", "Window title", "Active time", "CPU", "Always on top"]
 
         for row, label in enumerate(labels):
             tk.Label(self.status_window, text=label, anchor="w", bg="#232323", fg="#c7c1b6", padx=10, pady=3).grid(row=row, column=0, sticky="w")
@@ -382,6 +469,7 @@ class DexDesktop:
             "Mode": self.mode,
             "Pose": self.pose,
             "Reaction": self.current_reaction,
+            "Reaction time": self.reaction_time_label(),
             "Test reaction": self.test_reaction or "none",
             "Detected app": activity.get("exe") or "unknown",
             "Window title": title or "unknown",
@@ -397,6 +485,12 @@ class DexDesktop:
 
         self.status_window.after(500, self.refresh_status_window)
 
+    def reaction_time_label(self):
+        if self.current_reaction == "none" or not self.reaction_until:
+            return "none"
+        remaining = max(0, int(self.reaction_until - time.time()))
+        return f"{remaining}s"
+
     def choose_pose(self, now):
         self.current_activity = self.activity_monitor.snapshot()
         self.clear_expired_manual_mode(now)
@@ -404,7 +498,7 @@ class DexDesktop:
         self.pose = "trot"
         self.item = "none"
         self.gear = "none"
-        self.current_reaction = "none"
+        self.clear_expired_reaction(now)
 
         if self.mode == "happy":
             self.pose = "happy"
@@ -438,6 +532,9 @@ class DexDesktop:
         if self.apply_activity_reaction():
             return
 
+        if self.apply_current_reaction(now):
+            return
+
         if now > self.sleep_after:
             self.pose = "sleep"
 
@@ -465,68 +562,100 @@ class DexDesktop:
         active_seconds = activity["active_seconds"]
         cpu = activity["cpu"]
 
-        if cpu is not None and cpu >= 85:
-            self.apply_named_reaction("cpu_spike")
-            return True
-
         if exe == "excel.exe":
-            self.apply_named_reaction("excel_disappointed")
-            return True
+            if self.apply_named_reaction("excel_disappointed"):
+                return True
 
         if exe == "powerpnt.exe":
-            self.apply_named_reaction("powerpoint_bored_long" if active_seconds >= 20 * 60 else "powerpoint_bored")
-            return True
+            reaction = "powerpoint_bored_long" if active_seconds >= 20 * 60 else "powerpoint_bored"
+            if self.apply_named_reaction(reaction):
+                return True
 
-        if exe in {"teams.exe", "ms-teams.exe", "zoom.exe"}:
-            self.apply_named_reaction("meeting_fatigue" if active_seconds >= 60 * 60 else "meeting_watch")
-            return True
-
-        engineering_exes = {
-            "code.exe",
+        terminal_exes = {
             "windowsterminal.exe",
             "powershell.exe",
             "pwsh.exe",
             "cmd.exe",
+        }
+        if exe in terminal_exes:
+            if self.apply_named_reaction("terminal_watch"):
+                return True
+
+        if cpu is not None and cpu >= 85:
+            if self.apply_named_reaction("cpu_spike"):
+                return True
+
+        if exe in {"teams.exe", "ms-teams.exe", "zoom.exe"}:
+            reaction = "meeting_fatigue" if active_seconds >= 60 * 60 else "meeting_watch"
+            if self.apply_named_reaction(reaction):
+                return True
+
+        engineering_exes = {
+            "code.exe",
             "docker desktop.exe",
         }
         engineering_titles = ("node-red", "ignition", "gateway", "docker", "plc")
         if exe in engineering_exes or any(token in title for token in engineering_titles):
-            self.apply_named_reaction("supervising")
-            return True
+            if self.apply_named_reaction("supervising"):
+                return True
 
         return False
+
+    def apply_current_reaction(self, now):
+        if self.current_reaction == "none" or now >= self.reaction_until:
+            return False
+        profile = REACTION_PROFILES.get(self.reaction_key())
+        if not profile:
+            return False
+        self.apply_reaction_profile(profile)
+        return True
 
     def apply_named_reaction(self, reaction, is_test=False):
         if not reaction:
             return False
 
+        profile = REACTION_PROFILES.get(reaction)
+        if not profile:
+            return False
+
+        now = time.time()
+        current_key = self.reaction_key()
+        if current_key == reaction and now < self.reaction_until:
+            self.apply_reaction_profile(profile)
+            return True
+
+        if self.current_reaction != "none" and now < self.reaction_until and not is_test:
+            current_profile = REACTION_PROFILES.get(current_key, {})
+            if profile.get("priority", 999) >= current_profile.get("priority", 999):
+                return False
+
+        cooldown_until = self.reaction_cooldowns.get(reaction, 0)
+        if not is_test and now < cooldown_until:
+            return False
+
         self.current_reaction = f"test_{reaction}" if is_test else reaction
+        self.reaction_started_at = now
+        self.reaction_until = now + profile.get("duration", 6)
+        if not is_test:
+            self.reaction_cooldowns[reaction] = self.reaction_until + profile.get("cooldown", 30)
+        self.apply_reaction_profile(profile)
+        return True
 
-        if reaction == "excel_disappointed":
-            self.pose = "sit"
-            return True
+    def apply_reaction_profile(self, profile):
+        self.pose = profile["pose"]
+        self.item = profile.get("item", "none")
 
-        if reaction == "powerpoint_bored":
-            self.pose = "sit"
-            return True
+    def clear_expired_reaction(self, now):
+        if self.current_reaction != "none" and now < self.reaction_until:
+            return
+        self.current_reaction = "none"
+        self.reaction_until = 0
+        self.reaction_started_at = 0
 
-        if reaction == "powerpoint_bored_long":
-            self.pose = "sleep"
-            return True
-
-        if reaction in {"meeting_watch", "meeting_fatigue"}:
-            if reaction == "meeting_fatigue":
-                self.pose = "leash"
-                self.item = "leash"
-            else:
-                self.pose = "sit"
-            return True
-
-        if reaction in {"supervising", "cpu_spike"}:
-            self.pose = "patrol"
-            return True
-
-        return False
+    def reaction_key(self):
+        if self.current_reaction.startswith("test_"):
+            return self.current_reaction[5:]
+        return self.current_reaction
 
     def move(self, now):
         if self.dragging:
@@ -542,7 +671,8 @@ class DexDesktop:
         elif self.pose == "zoom":
             speed = 10
         elif self.pose == "patrol":
-            speed = 1.25
+            profile = REACTION_PROFILES.get(self.reaction_key(), {})
+            speed = 1.25 * profile.get("speed_multiplier", 1.0)
         elif self.pose == "leash":
             speed = 0.55
         else:
@@ -715,23 +845,25 @@ class DexDesktop:
             return False
         self.canvas.delete("all")
         stride = 0
-        if self.pose in {"trot", "happy", "patrol", "leash", "zoom"}:
+        if self.pose in SPRITE_NUDGE_POSES:
             stride = -1 if self.step_phase < 0.5 else 1
         rate = 14 if pose.startswith("zoom") else 7 if pose.startswith(("trot", "happy", "patrol")) else 3
         index = int(time.time() * rate) % len(frames)
-        sprite_x = 2 + stride
+        sprite_x = SPRITE_X_BASE + stride
         self.canvas.create_image(sprite_x, SPRITE_Y, image=frames[index], anchor="nw")
         self.draw_reaction_overlays(pose, sprite_x, SPRITE_Y)
         self.draw_life_overlays(pose, SPRITE_Y)
         return True
 
     def draw_reaction_overlays(self, pose, x, y):
-        if not self.current_reaction.endswith("excel_disappointed"):
+        profile = REACTION_PROFILES.get(self.reaction_key(), {})
+        bubble = profile.get("bubble")
+        if not bubble:
             return
 
-        self.draw_growl_balloon(pose, x, y)
+        self.draw_reaction_balloon(pose, bubble)
 
-    def draw_growl_balloon(self, pose, x, y):
+    def draw_reaction_balloon(self, pose, text):
         facing_right = pose.endswith("_left")
         pulse = 1 if int(time.time() * 3) % 2 else 0
 
@@ -749,7 +881,7 @@ class DexDesktop:
         self.canvas.create_text(
             text_x,
             17 + pulse,
-            text="GRROWWLL",
+            text=text,
             fill="#31271f",
             font=("TkDefaultFont", 8, "bold"),
         )
