@@ -17,6 +17,54 @@ SPRITE_X_BASE = 2
 SPRITE_NUDGE_POSES = {"zoom"}
 DEX_VERSION = "v11-walk-cleanup-backlog"
 
+REACTION_PROFILES = {
+    "excel_disappointed": {
+        "label": "Test Excel reaction",
+        "pose": "sit",
+        "bubble": "GRROWWLL",
+    },
+    "powerpoint_bored": {
+        "label": "Test PowerPoint reaction",
+        "pose": "sit",
+        "bubble": "SIGH.",
+    },
+    "powerpoint_bored_long": {
+        "pose": "sleep",
+        "bubble": "YAAWN...",
+    },
+    "terminal_watch": {
+        "label": "Test Terminal reaction",
+        "pose": "patrol",
+        "bubble": "ON WATCH",
+    },
+    "cpu_spike": {
+        "label": "Test CPU spike",
+        "pose": "patrol",
+        "speed_multiplier": 1.4,
+    },
+    "inactivity": {
+        "label": "Test Inactivity",
+        "pose": "leash",
+        "item": "leash",
+        "bubble": "WALK?",
+    },
+    "meeting_watch": {
+        "pose": "sit",
+        "bubble": "STILL?",
+    },
+    "meeting_fatigue": {
+        "label": "Test Meeting fatigue",
+        "pose": "leash",
+        "item": "leash",
+        "bubble": "WALK.",
+    },
+    "supervising": {
+        "label": "Test Engineering supervision",
+        "pose": "patrol",
+        "bubble": "STEADY.",
+    },
+}
+
 
 class WindowsActivityMonitor:
     def __init__(self):
@@ -222,10 +270,10 @@ class DexDesktop:
 
     def build_test_reaction_menu(self):
         menu = tk.Menu(self.menu, tearoff=0)
-        menu.add_command(label="Test Excel reaction", command=lambda: self.set_test_reaction("excel_disappointed"))
-        menu.add_command(label="Test PowerPoint reaction", command=lambda: self.set_test_reaction("powerpoint_bored"))
-        menu.add_command(label="Test Meeting fatigue", command=lambda: self.set_test_reaction("meeting_fatigue"))
-        menu.add_command(label="Test Engineering supervision", command=lambda: self.set_test_reaction("supervising"))
+        for reaction, profile in REACTION_PROFILES.items():
+            label = profile.get("label")
+            if label:
+                menu.add_command(label=label, command=lambda name=reaction: self.set_test_reaction(name))
         menu.add_separator()
         menu.add_command(label="Clear test reaction", command=self.clear_test_reaction)
         return menu
@@ -483,12 +531,18 @@ class DexDesktop:
             self.apply_named_reaction("meeting_fatigue" if active_seconds >= 60 * 60 else "meeting_watch")
             return True
 
-        engineering_exes = {
-            "code.exe",
+        terminal_exes = {
             "windowsterminal.exe",
             "powershell.exe",
             "pwsh.exe",
             "cmd.exe",
+        }
+        if exe in terminal_exes:
+            self.apply_named_reaction("terminal_watch")
+            return True
+
+        engineering_exes = {
+            "code.exe",
             "docker desktop.exe",
         }
         engineering_titles = ("node-red", "ignition", "gateway", "docker", "plc")
@@ -502,33 +556,19 @@ class DexDesktop:
         if not reaction:
             return False
 
+        profile = REACTION_PROFILES.get(reaction)
+        if not profile:
+            return False
+
         self.current_reaction = f"test_{reaction}" if is_test else reaction
+        self.pose = profile["pose"]
+        self.item = profile.get("item", "none")
+        return True
 
-        if reaction == "excel_disappointed":
-            self.pose = "sit"
-            return True
-
-        if reaction == "powerpoint_bored":
-            self.pose = "sit"
-            return True
-
-        if reaction == "powerpoint_bored_long":
-            self.pose = "sleep"
-            return True
-
-        if reaction in {"meeting_watch", "meeting_fatigue"}:
-            if reaction == "meeting_fatigue":
-                self.pose = "leash"
-                self.item = "leash"
-            else:
-                self.pose = "sit"
-            return True
-
-        if reaction in {"supervising", "cpu_spike"}:
-            self.pose = "patrol"
-            return True
-
-        return False
+    def reaction_key(self):
+        if self.current_reaction.startswith("test_"):
+            return self.current_reaction[5:]
+        return self.current_reaction
 
     def move(self, now):
         if self.dragging:
@@ -544,7 +584,8 @@ class DexDesktop:
         elif self.pose == "zoom":
             speed = 10
         elif self.pose == "patrol":
-            speed = 1.25
+            profile = REACTION_PROFILES.get(self.reaction_key(), {})
+            speed = 1.25 * profile.get("speed_multiplier", 1.0)
         elif self.pose == "leash":
             speed = 0.55
         else:
@@ -728,12 +769,14 @@ class DexDesktop:
         return True
 
     def draw_reaction_overlays(self, pose, x, y):
-        if not self.current_reaction.endswith("excel_disappointed"):
+        profile = REACTION_PROFILES.get(self.reaction_key(), {})
+        bubble = profile.get("bubble")
+        if not bubble:
             return
 
-        self.draw_growl_balloon(pose, x, y)
+        self.draw_reaction_balloon(pose, bubble)
 
-    def draw_growl_balloon(self, pose, x, y):
+    def draw_reaction_balloon(self, pose, text):
         facing_right = pose.endswith("_left")
         pulse = 1 if int(time.time() * 3) % 2 else 0
 
@@ -751,7 +794,7 @@ class DexDesktop:
         self.canvas.create_text(
             text_x,
             17 + pulse,
-            text="GRROWWLL",
+            text=text,
             fill="#31271f",
             font=("TkDefaultFont", 8, "bold"),
         )

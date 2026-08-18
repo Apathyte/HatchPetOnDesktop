@@ -167,6 +167,30 @@ Autonomous allowed:
 
 - Yes for a document/spike. No runtime rewrite without user confirmation.
 
+### Lane 6: Real-Clock Break Reminder
+
+Purpose: make Dex bring his leash on a real hourly cadence, not only as a passive inactivity side effect.
+
+Branch suggestion: `feature/v12-clock-reminder`
+
+Tasks:
+
+- Add a small reminder class that tracks wall-clock reminder cadence.
+- Let the reminder trigger Dex's leash mode when the hourly break is due.
+- Keep it app-internal first so it works while Dex is running.
+- Defer Windows scheduled task integration unless reminders are needed while Dex is not running.
+- Add menu/test visibility so the behavior can be validated without waiting a full hour.
+
+Acceptance output:
+
+- Dex can enter leash mode from a real-clock reminder.
+- Reminder behavior is configurable or easy to disable.
+- No external scheduler is required for the first version.
+
+Autonomous allowed:
+
+- Yes for a scoped app-internal reminder class. Ask before adding Windows scheduled task setup.
+
 ## Recommended Run Order
 
 1. Lane 0: confirm task separation and autonomy rules.
@@ -175,6 +199,7 @@ Autonomous allowed:
 4. Lane 3: implement balloon-driven reactions in priority order.
 5. Lane 4: polish controls if quick or if bugs appear during testing.
 6. Lane 5: document the future animation-pipeline promotion path.
+7. Lane 6: add a real-clock leash reminder class when the reaction/movement baseline is accepted.
 
 ## First Autonomous Run Proposal
 
