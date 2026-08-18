@@ -46,6 +46,16 @@ Answering these should happen before major v12 implementation. Short answers are
 9. How much should the browser prototype matter now that the desktop overlay is running for real?
 10. Should future work optimize for all-day use first, or richer character expression first?
 
+## Initial Vision Decisions
+
+These are the first v12 answers and should guide implementation unless later revised.
+
+- Dex is a calm guardian first. Specific emotes should appear through context and deliberate reactions, but his base identity is protective and steady.
+- Dex should be autonomous. Manual and test controls exist mainly to confirm how autonomous behavior will work, not because the final experience should depend on constant user commands.
+- Dex can be playful and opinionated for now. The exact interruption level should be revisited after more real all-day use.
+- Initial reaction priority is: Excel, PowerPoint, Terminal, CPU spike, Inactivity. Other reactions can follow later based on usefulness or charm.
+- The all-day reliability versus richer expression question needs another level of detail. It is expected to be a mix, not a strict either-or.
+
 ## v12 Candidate Work Packages
 
 ### 1. Planning And Memory
@@ -94,6 +104,16 @@ Future check:
 - Update the roadmap or decision log before starting larger v12 implementation.
 
 This check is expected to refine the next steps, not block small safe improvements.
+
+## v12 Balance Question
+
+The remaining planning question is how to balance all-day comfort with richer character expression. Suggested framing:
+
+- Reliability floor: the things Dex must do before any expressive feature counts as shippable. Examples: no annoying focus stealing, stable exit/pause controls, predictable topmost behavior, readable status, no runaway CPU.
+- Expression ceiling: the richest behavior Dex should have in v12 without becoming distracting. Examples: dedicated Excel/PPT/terminal emotes, short opinionated bubbles, calmer idle guarding, rare bigger reactions.
+- Release bundle: the smallest mix of both that deserves `stable-v12-*`.
+
+Open follow-up: what is the minimum reliability floor, and what is the most important expression ceiling for v12?
 
 ## Preload Requirements For Future Sessions
 
