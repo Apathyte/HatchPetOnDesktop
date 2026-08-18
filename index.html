@@ -11,28 +11,28 @@
       <section class="workbench">
         <div class="window active" data-app="terminal">
           <header>
-            <span>Ignition Gateway Console</span>
+            <span>Pet Runtime Console</span>
             <div class="window-actions"><i></i><i></i><i></i></div>
           </header>
-          <pre>&gt; docker compose up ignition node-red
-&gt; gateway: online
-&gt; plc tags: 2481 watched
-&gt; dex: supervising workstation...</pre>
+          <pre>&gt; hatch pet runtime: online
+&gt; sprite engine: ready
+&gt; reaction profiles: loaded
+&gt; dex: supervising desktop...</pre>
         </div>
 
         <div class="window small" data-app="vscode">
           <header>
-            <span>VSCode</span>
+            <span>Code Editor</span>
             <div class="window-actions"><i></i><i></i><i></i></div>
           </header>
-          <pre>src/pipeline.ts
-PLC_POLL_MS = 500
+          <pre>src/pet_runtime.py
+FRAME_MS = 120
 status: steady</pre>
         </div>
 
         <div class="window sheet" data-app="excel">
           <header>
-            <span>Excel</span>
+            <span>Spreadsheet</span>
             <div class="window-actions"><i></i><i></i><i></i></div>
           </header>
           <div class="grid" aria-hidden="true"></div>
@@ -41,8 +41,8 @@ status: steady</pre>
         <canvas id="dex" width="260" height="180" aria-label="Dex pixel-art desktop pet"></canvas>
 
         <div class="notification" hidden>
-          <strong>Build warning</strong>
-          <span>Line pressure tag stale</span>
+          <strong>Runtime note</strong>
+          <span>Dex is watching the desktop.</span>
         </div>
       </section>
 
@@ -57,13 +57,13 @@ status: steady</pre>
             <span>Active app</span>
             <select id="appSelect">
               <option value="terminal">Terminal</option>
-              <option value="vscode">VSCode</option>
-              <option value="docker">Docker Desktop</option>
-              <option value="node-red">Node-RED</option>
-              <option value="ignition">Ignition</option>
-              <option value="powerpoint">PowerPoint</option>
-              <option value="excel">Excel</option>
-              <option value="meeting">Teams / Zoom</option>
+              <option value="vscode">Code Editor</option>
+              <option value="docker">Heavy App</option>
+              <option value="node-red">Flow Editor</option>
+              <option value="ignition">Runtime Console</option>
+              <option value="powerpoint">Presentation</option>
+              <option value="excel">Spreadsheet</option>
+              <option value="meeting">Meeting</option>
             </select>
           </label>
 
