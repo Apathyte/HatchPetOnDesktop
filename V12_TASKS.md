@@ -209,6 +209,29 @@ Autonomous allowed:
 6. Lane 5: document the future animation-pipeline promotion path.
 7. Lane 6: add a real-clock leash reminder class when the reaction/movement baseline is accepted.
 
+## Current Pre-Promotion Review
+
+Branch: `fix/v12-reaction-state-and-sprite-diagnostics`
+
+Scope:
+
+- Lock reaction profiles behind explicit duration, cooldown, and priority fields.
+- Keep app-triggered reactions from feeling random or constant.
+- Add status-window visibility for active reaction time remaining.
+- Add sprite diagnostic artifacts for the visible white pixels, lower-body blobbage, stiff behind leg, and right-edge one-frame artifact.
+
+Promotion recommendation:
+
+- Reaction-state fixes can be promoted if live testing confirms they behave calmly.
+- Sprite diagnostics should remain separate from promotion unless the next pass is a targeted pixel cleanup.
+- The behind-leg patrol issue belongs with the animation pipeline spike, not a simple cleanup pass.
+
+Next candidate branches:
+
+- `fix/v12-targeted-sprite-pixels`: surgical cleanup for confirmed white pixels and isolated right-edge artifact frames.
+- `spike/v13-animation-pipeline`: metadata and beat-sequencing prep for real emotes.
+- `feature/v12-clock-reminder`: app-internal hourly leash reminder class after the current baseline is accepted.
+
 ## First Autonomous Run Proposal
 
 Start with Lane 1 only:
