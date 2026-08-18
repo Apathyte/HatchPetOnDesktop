@@ -1,6 +1,9 @@
+> Public note: this is a personal hobby prototype inspired by the desktop pet / Hatch Pet idea. It is not an official Hatch Pet package, not a polished application, and not affiliated with any workplace or vendor project.
+> 
 # Dex Desktop Pet
 
-Dex is a static browser prototype for a pixel-art workstation companion: a stocky charcoal-black Cane Corso and pit bull mix with an old grey muzzle, calm protector energy, and engineering-shop personality.
+
+Dex is a static browser prototype and Windows desktop overlay trial for a pixel-art workstation companion: a stocky charcoal-black Cane Corso and pit bull mix with an old grey muzzle, calm protector energy, and grumpy workstation personality.
 
 `stable-v1/` contains the first stable desktop trial.
 `stable-v2/` contains the improved hand-drawn Tkinter version.
@@ -26,7 +29,7 @@ Open `index.html` in a browser to try it. Dex is rendered on canvas, so his spri
 - Excel reaction shows a small `GRROWWLL` balloon above Dex without modifying the base sprite art.
 - The always-on-top menu item shows `yes` or `no`.
 - Desktop overlay detects the foreground Windows app/window title read-only.
-- Reacts to Excel, PowerPoint, VSCode, terminals, Docker Desktop, Node-RED, Ignition, Teams/Zoom, and CPU spikes.
+- Reacts to spreadsheets, presentations, code editors, terminals, meetings, heavier runtime contexts, and CPU spikes.
 - Gets more persistent after long inactivity.
 - Can be dragged around the screen as a short walk.
 - Can enter midnight patrol and has rare zoomies.
@@ -34,7 +37,7 @@ Open `index.html` in a browser to try it. Dex is rendered on canvas, so his spri
 ## Files
 
 - `index.html` - desktop simulation and controls.
-- `styles.css` - retro industrial UI and responsive layout.
+- `styles.css` - retro workstation UI and responsive layout.
 - `dex.js` - canvas sprite renderer, animation states, and behavior profile.
 - `dex_desktop.py` - dependency-free Windows desktop overlay trial.
 - `run_dex.bat` - double-click launcher for the desktop overlay.
