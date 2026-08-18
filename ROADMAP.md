@@ -54,7 +54,8 @@ These are the first v12 answers and should guide implementation unless later rev
 - Dex should be autonomous. Manual and test controls exist mainly to confirm how autonomous behavior will work, not because the final experience should depend on constant user commands.
 - Dex can be playful and opinionated for now. The exact interruption level should be revisited after more real all-day use.
 - Initial reaction priority is: Excel, PowerPoint, Terminal, CPU spike, Inactivity. Other reactions can follow later based on usefulness or charm.
-- The all-day reliability versus richer expression question needs another level of detail. It is expected to be a mix, not a strict either-or.
+- The current reliability floor is already good enough for a stable baseline. v12 should focus more on movement quality, sprite cleanup, and reducing visible jank/blobbage.
+- Expression should mostly use balloons/overlays for now because dedicated facial/body emotes are currently where sprite blobbage appears most easily. The tongue/emote attempts are a warning sign: do not force too much expression into the base sprite until the animation art pipeline is healthier.
 
 ## v12 Candidate Work Packages
 
@@ -68,29 +69,31 @@ Goal: make the repo carry the project context across machines.
 
 ### 2. Desktop Reliability And Controls
 
-Goal: make Dex more comfortable for all-day desktop use.
+Goal: preserve the already-acceptable all-day desktop baseline.
 
-- Improve right-click menu state indicators.
+- Improve right-click menu state indicators when convenient, but do not let control polish distract from the movement/sprite work.
 - Confirm pause, always-on-top, status window, and exit flows behave consistently.
-- Add a lightweight diagnostics note for foreground app detection and CPU readings.
+- Add a lightweight diagnostics note for foreground app detection and CPU readings only if it helps future debugging.
 - Avoid adding dependencies unless they clearly improve the Windows desktop experience.
 
 ### 3. Reaction System
 
-Goal: make reactions feel intentional rather than just pose switches.
+Goal: make reactions feel intentional while avoiding fragile sprite-emote work too early.
 
 - Define a small reaction profile table for app, trigger, pose, overlay, text/bubble, duration, and priority.
 - Keep manual test reactions available from the right-click menu.
-- Add dedicated overlays or sprites in priority order after the vision answers land.
+- Prioritize balloons/overlays for v12 expression.
+- Add dedicated body/facial sprites only after the movement and sprite pipeline are less janky.
 
 ### 4. Sprite And Motion Cleanup
 
-Goal: improve the walk without losing Dex's current liked look.
+Goal: make Dex feel comfortable living on the desktop all day, not just acceptable as a prototype.
 
 - Preserve the current v11 baseline before any redraw work.
 - Work on walking/patrol lower-body frames in a separate branch.
 - Prefer before/after screenshots or sprite contact sheets for review.
 - Do not quick-fix stray pixels if the real issue is frame anatomy.
+- Treat general movement quality and visible blobbage as the main v12 stable target.
 
 ### 5. Cross-Laptop Validation Pass
 
@@ -105,15 +108,36 @@ Future check:
 
 This check is expected to refine the next steps, not block small safe improvements.
 
+## Animation Strategy
+
+Current recommendation: keep iterating this way for v12, but define a future promotion point.
+
+### v12: Clean The Current System
+
+- Stay with the current Tkinter desktop overlay and existing sprite-frame assets.
+- Improve the walk/patrol frames enough that Dex feels less janky in daily use.
+- Keep expression mostly in balloons and overlays.
+- Add tooling only if it helps review the sprite frames, such as a contact sheet or before/after preview.
+
+### Future v13 Or Later: Promote The Animation Pipeline
+
+Move up when frame-by-frame cleanup stops producing good returns. Candidate direction:
+
+- Separate behavior state, animation timing, sprite assets, and overlays more cleanly.
+- Use explicit animation definitions instead of hardcoded pose/frame choices spread through the desktop runtime.
+- Consider a proper sprite-sheet/metadata workflow for frame timing, anchors, contact points, and overlays.
+- Keep Tkinter if it remains enough for the desktop overlay, but make the animation system less dependent on one-off code tweaks.
+
+Promotion trigger: if walking, sitting, or app-specific emotes keep requiring fragile pixel fixes or create new blobbage, stop adding emotes and refactor the animation pipeline first.
+
 ## v12 Balance Question
 
-The remaining planning question is how to balance all-day comfort with richer character expression. Suggested framing:
+The reliability-versus-expression answer is now:
 
-- Reliability floor: the things Dex must do before any expressive feature counts as shippable. Examples: no annoying focus stealing, stable exit/pause controls, predictable topmost behavior, readable status, no runaway CPU.
-- Expression ceiling: the richest behavior Dex should have in v12 without becoming distracting. Examples: dedicated Excel/PPT/terminal emotes, short opinionated bubbles, calmer idle guarding, rare bigger reactions.
-- Release bundle: the smallest mix of both that deserves `stable-v12-*`.
-
-Open follow-up: what is the minimum reliability floor, and what is the most important expression ceiling for v12?
+- Reliability floor: the current desktop baseline is already above the minimum expected stable standard.
+- v12 stable target: reduce janky movement and sprite blobbage enough that Dex feels natural to leave running on the desktop.
+- Expression ceiling: use opinionated balloons/overlays for contextual emotes while avoiding complex base-sprite expression until the art/animation pipeline improves.
+- Release bundle: movement cleanup plus balloon-driven Excel/PPT/Terminal/CPU/Inactivity reactions is enough to justify a `stable-v12-*` candidate.
 
 ## Preload Requirements For Future Sessions
 
@@ -129,10 +153,10 @@ Useful things to have ready before asking Codex to implement v12 work:
 
 ## First Recommended v12 Move
 
-Start with a low-risk branch for desktop control polish:
+Start with a movement/sprite review branch:
 
-- Better checked/unchecked right-click menu state for always-on-top.
-- Confirm pause/resume label behavior.
-- Add or update a short decision log after the vision questions are answered.
+- Generate or inspect a frame contact sheet for the current walk/patrol/sit frames.
+- Identify whether the blobbage is mostly in source PNG frames, runtime placement/anchor issues, or motion timing.
+- Make the smallest cleanup that improves daily movement quality without changing Dex's core silhouette.
 
-Then move into reaction profiles and sprite redraw work once the singular vision is settled.
+Then add balloon-driven reaction profiles for Excel, PowerPoint, Terminal, CPU spike, and Inactivity.
