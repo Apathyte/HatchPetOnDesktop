@@ -472,7 +472,7 @@ class DexDesktop:
             "Reaction time": self.reaction_time_label(),
             "Test reaction": self.test_reaction or "none",
             "Detected app": activity.get("exe") or "unknown",
-            "Window title": title or "unknown",
+            "Window title": "hidden",
             "Active time": f"{int(activity.get('active_seconds') or 0)}s",
             "CPU": "unknown" if cpu is None else f"{cpu:.0f}%",
             "Always on top": "yes" if self.always_on_top else "no",

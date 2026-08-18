@@ -29,7 +29,7 @@ Open `index.html` in a browser to try it. Dex is rendered on canvas, so his spri
 - Right-click menu includes `Test reactions` for manually simulating Excel, PowerPoint, meeting fatigue, and engineering supervision.
 - Excel reaction shows a small `GRROWWLL` balloon above Dex without modifying the base sprite art.
 - The always-on-top menu item shows `yes` or `no`.
-- Desktop overlay detects the foreground Windows app/window title read-only.
+- Desktop overlay detects the foreground Windows app and evaluates the window title in memory for local reactions. Window-title display is hidden by default.
 - Reacts to spreadsheets, presentations, code editors, terminals, meetings, heavier runtime contexts, and CPU spikes.
 - Gets more persistent after long inactivity.
 - Can be dragged around the screen as a short walk.
@@ -64,3 +64,17 @@ Win + R -> shell:startup
 ```
 
 Then paste a shortcut there.
+
+## Privacy and Security
+
+- Dex has no telemetry, network client, remote script loading, account integration, or automatic persistence installer.
+- Foreground application data is processed locally and is not written to disk or transmitted.
+- The status window hides document/window titles by default to reduce screen-sharing and screenshot leakage.
+- This repository distributes source only. Do not trust unofficial prebuilt executables presented as Dex releases.
+- Asset-maintenance tools resolve and validate the repository asset directory before replacing PNG files.
+
+Please report security concerns using the guidance in [`SECURITY.md`](SECURITY.md). Never post credentials or confidential material in a public issue.
+
+## License
+
+Software source is available under the [MIT License](LICENSE). Original artwork and sprite assets are available under [CC BY 4.0](ASSET_LICENSE.md). Names, logos, and third-party marks are not granted by either license.

@@ -2,9 +2,9 @@
 
 This file separates v12 work into reviewable tasks that can be run autonomously while keeping Dex's stable baseline safe.
 
-## Autonomy Rules
+## Change Safety Rules
 
-Codex may do these without stopping for approval:
+Routine branch work may include:
 
 - Read repo files, inspect branches, and summarize findings.
 - Create new feature/planning branches from the current reviewed branch.
@@ -12,7 +12,7 @@ Codex may do these without stopping for approval:
 - Make small scoped code changes on a feature branch when the task has a clear acceptance test.
 - Commit changes to feature branches with descriptive messages.
 
-Codex should ask first before doing these:
+Maintainer review is required before:
 
 - Editing `main` directly.
 - Creating or replacing a `stable-v*` snapshot.
@@ -33,18 +33,18 @@ Explicit defaults:
 
 ### Lane 0: Planning And Memory
 
-Purpose: keep the project understandable across machines and chat threads.
+Purpose: keep the project understandable from a clean checkout without private or machine-specific context.
 
 Tasks:
 
 - Keep `ROADMAP.md` current as vision decisions land.
 - Keep this task list current as work is split or completed.
 - Add a `DECISIONS.md` file if the roadmap starts getting too dense.
-- Later, run the work-laptop chat validation pass and update roadmap/tasks from that context.
+- Later, run the continuity validation pass and update roadmap/tasks from sanitized technical decisions.
 
 Review checkpoint:
 
-- User confirms the task lanes and autonomy rules are acceptable.
+- Maintainer confirms the task lanes and change-safety rules are acceptable.
 
 ### Lane 1: Movement And Sprite Audit
 
@@ -92,7 +92,7 @@ Acceptance output:
 
 Autonomous allowed:
 
-- Partially. Codex can implement anchor/timing/code fixes autonomously. Pixel-art redraws should pause for review after the audit unless the change is tiny artifact cleanup.
+- Partially. Anchor, timing, and code fixes may proceed on a feature branch. Pixel-art redraws should pause for maintainer review after the audit unless the change is tiny artifact cleanup.
 
 ### Lane 3: Balloon-Driven Reaction Profiles
 
@@ -123,7 +123,7 @@ Acceptance output:
 
 Autonomous allowed:
 
-- Yes for code and balloon copy drafts. User review is useful for final wording/tone.
+- Yes for code and balloon copy drafts. Maintainer review is useful for final wording and tone.
 
 ### Lane 4: Desktop Control Polish
 
@@ -173,7 +173,7 @@ Acceptance output:
 
 Autonomous allowed:
 
-- Yes for a document/spike. No runtime rewrite without user confirmation.
+- Yes for a document or spike. No runtime rewrite without maintainer approval.
 
 ### Lane 6: Real-Clock Break Reminder
 

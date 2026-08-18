@@ -1,10 +1,22 @@
 import os
+from pathlib import Path
 import struct
 import zlib
 
 
-SRC = os.path.join("assets", "concepts", "dex-concept-spike-reference-v1.png")
-OUT = os.path.join("assets", "dex-concept")
+def find_project_dir():
+    """Resolve the nearest project/snapshot root; never trust the caller's cwd."""
+    for candidate in Path(__file__).resolve().parents:
+        if (candidate / "assets" / "dex-concept").is_dir():
+            return candidate
+    raise RuntimeError("Refusing asset changes: project assets directory not found")
+
+
+PROJECT_DIR = find_project_dir()
+
+
+SRC = str(PROJECT_DIR / "assets" / "concepts" / "dex-concept-spike-reference-v1.png")
+OUT = str(PROJECT_DIR / "assets" / "dex-concept")
 TARGET_W = 184
 TARGET_H = 128
 

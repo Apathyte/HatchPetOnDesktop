@@ -1,10 +1,22 @@
 import math
 import os
+from pathlib import Path
 import struct
 import zlib
 
 
-OUT_DIR = os.path.join("assets", "dex")
+def find_project_dir():
+    """Resolve the nearest project/snapshot root; never trust the caller's cwd."""
+    for candidate in Path(__file__).resolve().parents:
+        if (candidate / "assets" / "dex-concept").is_dir():
+            return candidate
+    raise RuntimeError("Refusing asset changes: project assets directory not found")
+
+
+PROJECT_DIR = find_project_dir()
+
+
+OUT_DIR = str(PROJECT_DIR / "assets" / "dex")
 W, H = 160, 112
 SS = 4
 HW, HH = W * SS, H * SS

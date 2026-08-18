@@ -1,10 +1,22 @@
 import os
+from pathlib import Path
 
 from cut_concept_sprites import mirror, read_png, write_png
 
 
-ASSET_DIR = os.path.join("assets", "dex-concept")
-STABLE_DIR = os.path.join("stable-v3", "assets", "dex-concept")
+
+
+def find_project_dir():
+    """Resolve the nearest project/snapshot root; never trust the caller's cwd."""
+    for candidate in Path(__file__).resolve().parents:
+        if (candidate / "assets" / "dex-concept").is_dir():
+            return candidate
+    raise RuntimeError("Refusing asset changes: project assets directory not found")
+
+
+PROJECT_DIR = find_project_dir()
+ASSET_DIR = str(PROJECT_DIR / "assets" / "dex-concept")
+STABLE_DIR = str(PROJECT_DIR / "stable-v3" / "assets" / "dex-concept")
 W, H = 184, 128
 
 

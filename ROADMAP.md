@@ -4,9 +4,9 @@ This roadmap starts a new planning line after the locked `stable-v11-walk-cleanu
 
 ## Working Name
 
-`v12-cross-laptop-vision`
+`v12-project-continuity`
 
-The point of v12 is not only new behavior. It is also the first version planned with the expectation that work may alternate between a personal PC and a work laptop. The repo should carry enough memory that the project does not depend on any one chat thread.
+The point of v12 is not only new behavior. It also makes the repository self-contained enough for development to continue across clean environments without relying on private conversations or machine-specific context.
 
 ## Branch And Version Policy
 
@@ -65,7 +65,7 @@ Goal: make the repo carry the project context across machines.
 
 - Add this roadmap.
 - Add a brief decision log once answers to the singular vision questions are known.
-- Keep branch notes in the repo instead of relying only on chat history.
+- Keep durable technical decisions in the repository instead of relying on external conversations.
 
 ### 2. Desktop Reliability And Controls
 
@@ -95,14 +95,14 @@ Goal: make Dex feel comfortable living on the desktop all day, not just acceptab
 - Do not quick-fix stray pixels if the real issue is frame anatomy.
 - Treat general movement quality and visible blobbage as the main v12 stable target.
 
-### 5. Cross-Laptop Validation Pass
+### 5. Continuity Validation Pass
 
-Goal: reconcile this plan with context from the work laptop.
+Goal: reconcile this plan with any relevant external technical notes before promotion.
 
 Future check:
 
-- Export, paste, or summarize the relevant work-laptop chat history.
-- Compare that context against this roadmap.
+- Summarize only the non-sensitive technical decisions needed by the project.
+- Compare those decisions against this roadmap.
 - Mark any missing intent, rejected ideas, personality decisions, or next-step commitments.
 - Update the roadmap or decision log before starting larger v12 implementation.
 
@@ -141,12 +141,12 @@ The reliability-versus-expression answer is now:
 
 ## Preload Requirements For Future Sessions
 
-Useful things to have ready before asking Codex to implement v12 work:
+Useful things to have ready before implementing v12 work:
 
-- The local path to the checked-out repo on the machine being used.
+- A clean checkout of the repository.
 - Confirmation of which branch should be edited.
 - A current screenshot or quick description of what looks wrong when Dex is running.
-- Any work-laptop chat export, pasted excerpts, or summary for the validation pass.
+- A sanitized summary of any external technical decisions needed for the validation pass.
 - Whether changes should be local-only, committed to a branch, or opened as a PR.
 - Python available on Windows for `run_dex.bat`; Tkinter is expected from the standard Python install.
 - For sprite work, the relevant `assets/dex-concept` frames and a preferred review method: screenshots, contact sheet, or live run.

@@ -62,7 +62,7 @@ These items are placeholders, not final emotional design:
 - PowerPoint should become an emotional progression: boredom, sigh/yawn, then nap.
 - Meeting and engineering reactions should stay as the second pack of emotes.
 
-## User Decisions Captured
+## Accepted Design Decisions
 
 - Keep the earlier PowerPoint spec: PowerPoint makes Dex bored/sitting first, then sleep after a longer active duration. Do not switch to immediate sleep.
 - PowerPoint yawn transition can be balloon-based before the sleep sprite because v12 expression should avoid fragile base-sprite emotes.
@@ -142,7 +142,7 @@ Before replacing placeholders with real emotes, define:
 
 ## Recommended Next Implementation
 
-After user review:
+After maintainer review:
 
 1. Validate live behavior through the right-click test menu.
 2. Decide whether the stacked movement + reaction branch should become a v12 candidate.
