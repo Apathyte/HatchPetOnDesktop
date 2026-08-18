@@ -515,20 +515,12 @@ class DexDesktop:
         active_seconds = activity["active_seconds"]
         cpu = activity["cpu"]
 
-        if cpu is not None and cpu >= 85:
-            self.apply_named_reaction("cpu_spike")
-            return True
-
         if exe == "excel.exe":
             self.apply_named_reaction("excel_disappointed")
             return True
 
         if exe == "powerpnt.exe":
             self.apply_named_reaction("powerpoint_bored_long" if active_seconds >= 20 * 60 else "powerpoint_bored")
-            return True
-
-        if exe in {"teams.exe", "ms-teams.exe", "zoom.exe"}:
-            self.apply_named_reaction("meeting_fatigue" if active_seconds >= 60 * 60 else "meeting_watch")
             return True
 
         terminal_exes = {
@@ -539,6 +531,14 @@ class DexDesktop:
         }
         if exe in terminal_exes:
             self.apply_named_reaction("terminal_watch")
+            return True
+
+        if cpu is not None and cpu >= 85:
+            self.apply_named_reaction("cpu_spike")
+            return True
+
+        if exe in {"teams.exe", "ms-teams.exe", "zoom.exe"}:
+            self.apply_named_reaction("meeting_fatigue" if active_seconds >= 60 * 60 else "meeting_watch")
             return True
 
         engineering_exes = {

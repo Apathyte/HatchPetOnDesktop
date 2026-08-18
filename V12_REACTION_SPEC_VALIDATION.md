@@ -22,25 +22,23 @@ From `ROADMAP.md` and `V12_TASKS.md`, v12 reactions should:
 
 | Reaction | Spec Intent | Current Trigger | Current Pose | Current Bubble/Overlay | Test Menu | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| Excel | First-priority opinionated growl/disappointment | `excel.exe` foreground | `sit` | `GRROWWLL` balloon | Yes | Implemented baseline |
-| PowerPoint | Bored/opinionated reaction | `powerpnt.exe`; long active time sleeps | `sit` or `sleep` | None in committed behavior | Yes | Pose exists, balloon missing |
-| Terminal | Guardian/supervision reaction for terminal work | Terminals currently included under engineering supervision | `patrol` | None in committed behavior | No dedicated terminal test | Partially present, not distinct |
-| CPU spike | Alert/protective reaction | CPU >= 85 percent | `patrol` | None in committed behavior | No dedicated CPU test | Pose exists, balloon/test missing |
-| Inactivity | Persistent guardian asks for a walk | More than 60 minutes inactive | `leash`, item `leash` | None in committed behavior | No dedicated inactivity test | Behavior exists, profile/test/bubble missing |
+| Excel | First-priority opinionated growl/disappointment | `excel.exe` foreground | `sit` | `GRROWWLL` balloon | Yes | Implemented |
+| PowerPoint | Bored/opinionated reaction | `powerpnt.exe`; long active time sleeps | `sit` or `sleep` | `SIGH.` or `YAAWN...` | Yes | Implemented |
+| Terminal | Guardian/supervision reaction for terminal work | Terminal executables | `patrol` | `ON WATCH` | Yes | Implemented |
+| CPU spike | Alert/protective reaction | CPU >= 85 percent | `patrol` at 1.4x movement speed | None by design | Yes | Implemented placeholder emote |
+| Inactivity | Persistent guardian asks for a walk | Manual test profile; legacy long inactivity remains passive | `leash`, item `leash` | `WALK?` in test profile | Yes | Testable placeholder; real clock reminder deferred |
 | Meeting | Existing non-priority reaction | Teams/Zoom foreground | `sit` or `leash` | None in committed behavior | Yes | Existing secondary behavior |
 | Engineering supervision | Existing non-priority reaction | VSCode, terminals, Docker, Node-RED/Ignition title tokens | `patrol` | None in committed behavior | Yes | Existing broad behavior |
 
 ## Draft/Placeholder State
 
-There is currently an uncommitted draft `REACTION_PROFILES` table in `dex_desktop.py`.
-
-That table is only a draft until it is wired into:
+`REACTION_PROFILES` is now wired into:
 
 - `build_test_reaction_menu`
-- `apply_activity_reaction`
 - `apply_named_reaction`
 - `draw_reaction_overlays`
-- Status diagnostics
+
+`apply_activity_reaction` still owns trigger order and maps foreground app/CPU conditions to reaction names.
 
 Draft balloon copy currently proposed:
 
@@ -108,26 +106,23 @@ Current v12 recommendation:
 - Inactivity has a profile/test entry for leash mode, while the existing passive long-inactivity behavior remains in place.
 - The real-clock hourly leash reminder is backlog as a separate class/lane, not implemented in this branch.
 
-## Implementation Gap
+## Remaining Implementation Gap
 
 The code does not yet have:
 
-- A fully wired profile table.
 - Per-reaction duration.
 - Per-reaction cooldown.
-- Dedicated test menu entries for Terminal, CPU spike, or Inactivity.
-- Generic balloon drawing for non-Excel reactions.
+- Real-clock hourly leash reminder.
+- Dedicated status display of profile metadata beyond the current reaction name.
 
 ## Recommended Next Implementation
 
 After user review:
 
-1. Wire `REACTION_PROFILES` into `apply_named_reaction`.
-2. Generate the test menu from profiles with labels.
-3. Replace `draw_growl_balloon` with generic balloon drawing that uses each profile's `bubble`.
-4. Add dedicated foreground terminal reaction as `terminal_watch`.
-5. Add manual tests for Terminal, CPU spike, and Inactivity.
-6. Add simple anti-spam timing only after the base profile behavior is visible and accepted.
+1. Validate live behavior through the right-click test menu.
+2. Decide whether the stacked movement + reaction branch should become a v12 candidate.
+3. Add simple anti-spam timing only after the base profile behavior is visible and accepted.
+4. Implement the real-clock leash reminder in a separate lane/branch.
 
 ## Review Questions
 
