@@ -47,6 +47,8 @@ Double-click `run_dex.bat` to let Dex run around on the actual desktop. Left-dra
 
 - Revisit sit-emote pixel cleanup; small white pixelation remains and is intentionally deferred.
 - Revisit walking/patrol sprite cleanup; some remaining lower-body blobbage is part of the drawn sprite frames and needs a careful redraw pass rather than quick artifact removal.
+- Bug/CR: Excel growl reaction should clear automatically when Excel is closed or loses foreground focus, ideally as soon as the user clicks into a different window.
+- Future use case: hourly walk reminder. Dex should validate roughly 60 minutes of seated/inactive time, grab or drop his leash, and ask to be walked. Runtime scheduling and final leash animation can be implemented separately; a placeholder emote is acceptable while graphics are refined.
 - Add a visible checked/unchecked indication for `Toggle always on top`, such as an on/off label or checkmark in the right-click menu.
 - Add dedicated sprites for Excel disappointment/growl, PowerPoint boredom, meeting fatigue, and engineering supervision.
 
