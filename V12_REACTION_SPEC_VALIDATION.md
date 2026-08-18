@@ -113,6 +113,8 @@ The code does not yet have:
 
 ## Emote Pack Plan
 
+Detailed animation intent now lives in `V12_EMOTE_SPEC.md`.
+
 ### Pack 1: Current v12 Placeholders
 
 - Excel: growl/disappointment.

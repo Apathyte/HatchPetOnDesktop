@@ -153,6 +153,10 @@ Purpose: clarify when to stop patching frames and move up to a healthier animati
 
 Branch suggestion: `spike/v13-animation-pipeline`
 
+Reference spec:
+
+- `V12_EMOTE_SPEC.md`
+
 Tasks:
 
 - Draft an animation metadata shape for pose, frames, facing direction, anchor point, contact point, frame rate, overlays, and movement speed.
